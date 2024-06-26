@@ -1,0 +1,603 @@
+---
+title: "2023_pok.27.3a46"
+subtitle: "Assessment Report"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  word_document:
+    toc: true
+    reference_docx: bootstrap/data/reportTemplate_narrow_margin.docx
+  mathjax: TRUE
+
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  fig.align = 'center', comment = NA,
+  message = FALSE, warning = FALSE, echo = TRUE,
+  fig.width = 6, fig.height = 4.5, dpi = 300)
+
+iFig <- 0
+iTab <- 0
+
+```
+
+```{r echo = FALSE, include = FALSE}
+library(knitr)
+library(icesAdvice)
+library(icesTAF)
+
+load(file.path(modelDir, "refPts.RData"))
+load(file.path(modelDir, "settings.RData"))
+```
+
+
+## Summary
+
+```{r, echo = FALSE}
+include_graphics(file.path(reportDir, "summary.png"))
+```
+
+**Figure `r iFig = iFig + 1; iFig`.** Summary
+
+\newline
+
+```{r, echo = FALSE}
+include_graphics(file.path(reportDir, "FLStock.png"))
+```
+
+**Figure `r iFig = iFig + 1; iFig`.** FLStock  summary with reference points (mean recruitment (`r paste(range(Ry), collapse = "-")`), Bpa = `r sprintf(fmt = "%.0f", refPts$Bpa)`)
+
+\newline
+
+
+**Table `r iTab = iTab + 1; iTab`.** Estimated recruitment, spawning stock biomass (SSB), and average fishing mortality.
+
+```{r echo = FALSE}
+tab <- read.csv(file.path(outputDir, "tab_summary.csv"), check.names = FALSE)
+tab[, 11:13] <- round(tab[, 11:13])
+kable(tab)
+```
+
+\newline
+
+## Fbar
+
+```{r, echo = FALSE}
+include_graphics(file.path(reportDir, "fbar.png"))
+```
+
+**Figure `r iFig = iFig + 1; iFig`.** Average fishing mortality for the shown age range. Estimates from the current run and point wise 95% confidence intervals are shown by line and shaded area.
+
+\newline
+
+**Table `r iTab = iTab + 1; iTab`.** Estimated fishing mortality at age.
+
+```{r echo = FALSE}
+tab <- read.csv(file.path(outputDir, "tab_fay.csv"), check.names = FALSE)
+tab[, -1] <- round(tab[, -1], 3) # icesRound(as.matrix(tab[, -1]))
+kable(tab)
+```
+
+## Recruitment
+
+```{r, echo = FALSE}
+include_graphics(file.path(reportDir, "rec.png"))
+```
+
+**Figure `r iFig = iFig + 1; iFig`.** Yearly resruitment. Estimates from the current run and point wise 95% confidence intervals are shown by line and shaded area.
+
+\newline
+
+## SSB & Numbers
+
+```{r, echo = FALSE}
+include_graphics(file.path(reportDir, "ssb.png"))
+```
+
+**Figure `r iFig = iFig + 1; iFig`.** Spawning stock biomass. Estimates from the current run and point wise 95% confidence intervals are shown by line and shaded area.
+
+\newline
+
+**Table `r iTab = iTab + 1; iTab`.** Estimated stock numbers (000's) at age.
+
+```{r echo = FALSE}
+tab <- read.csv(file.path(outputDir, "tab_numbers.csv"), check.names = FALSE)
+tab[] <- round(tab[], 0)
+kable(tab)
+```
+
+
+\newline
+
+## Indices
+
+**Table `r iTab = iTab + 1; iTab`.** Estimated stock numbers (000's) at age.
+
+```{r echo = FALSE}
+tab <- read.csv(file.path(outputDir, "tab_indices.csv"), check.names = FALSE)
+tab[, -1] <- round(c(as.matrix(tab[, -1])), 3)
+kable(tab)
+```
+
+\newline
+
+## Model parameters
+
+**Table `r iTab = iTab + 1; iTab`.** Indices
+
+```{r echo = FALSE}
+tab <- read.csv(file.path(outputDir, "tab_pars.csv"), check.names = FALSE)
+tab[, -1] <- apply(tab[, -1], 2, FUN = function(x){sprintf("%.4g", x)})
+## tab[, -1] <- sprintf("%.3g", tab[, -1]) # round(tab[, -1], 3)
+kable(tab)
+```
+
+
+\newline
+
+
+**Table `r iTab = iTab + 1; iTab`.** Model fitting
+
+```{r echo = FALSE}
+tab <- read.csv(file.path(outputDir, "tab_model.csv"), check.names = FALSE)
+kable(tab)
+```
+
+\newline
+
+**Table `r iTab = iTab + 1; iTab`.** Table of selected sd.
+
+```{r echo = FALSE}
+tab <- read.csv(file.path(outputDir, "tab_sd.csv"), check.names = FALSE)
+tab[, -1] <- round(tab[, -1], 3)
+kable(tab)
+```
+
+\newline
+
+**Table `r iTab = iTab + 1; iTab`.** Table of observation sd.
+
+```{r echo = FALSE}
+tab <- read.csv(file.path(outputDir, "tab_obs_sd.csv"), check.names = FALSE)
+tab[, -1] <- round(tab[, -1], 3)
+kable(tab)
+```
+\newline
+
+## Residuals
+
+```{r, echo = FALSE}
+include_graphics(file.path(reportDir, "residuals.png"))
+```
+
+**Figure `r iFig = iFig + 1; iFig`.** Residuals summary.
+
+\newline
+
+```{r, echo = FALSE}
+include_graphics(file.path(reportDir, "fleet1.png"))
+```
+
+**Figure `r iFig = iFig + 1; iFig`.** Residuals catch.
+
+\newline
+
+```{r, echo = FALSE}
+include_graphics(file.path(reportDir, "fleet2.png"))
+```
+
+**Figure `r iFig = iFig + 1; iFig`.** Residuals IBTS Q3.
+
+\newline
+
+```{r, echo = FALSE}
+include_graphics(file.path(reportDir, "fleet3.png"))
+```
+
+**Figure `r iFig = iFig + 1; iFig`.** Residuals Commercial CPUE.
+
+\newline
+
+## Retrospective
+
+```{r, echo = FALSE}
+include_graphics(file.path(reportDir, "retro.png"))
+```
+
+**Figure `r iFig = iFig + 1; iFig`.** Retrospective summary.
+
+\newpage
+
+**Table `r iTab = iTab + 1; iTab`.** Mohn's rho
+
+```{r echo = FALSE}
+tab <- read.csv(file.path(outputDir, "tab_mohn.csv"), check.names = FALSE)
+kable(tab)
+```
+
+
+\newpage
+
+## Leave-one-out
+
+```{r, echo = FALSE}
+include_graphics(file.path(reportDir, "leaveout.png"))
+```
+
+**Figure `r iFig = iFig + 1; iFig`.** Leave-one-out summary.
+
+\newpage
+
+## Forecast
+
+\newline
+
+**Table `r iTab = iTab + 1; iTab`.** Management scenarios (base forecast).
+
+```{r echo = FALSE}
+load(file.path(modelDir, "MS.RData"))
+MS_base <- MS
+knitr::kable(MS)
+```
+
+
+\newline
+
+### Interim year and forecast assumptions
+
+**Table `r iTab = iTab + 1; iTab`.** Geometric mean from unique resampled recruitement values (*i.e.* assymptotic value)
+
+```{r echo = FALSE}
+load(file.path(outputDir, "FC_df.Rdata"))
+Ryr.theo <- matrix(round(sapply(FC[[1]],
+                                function(x) gmean(unique(x$rec)))),
+                   nrow = 1,
+                   dimnames = list("Recruitment",
+                                   Year = as.character(sapply(FC[[i]],
+                                                              function(x) x$year))))
+
+knitr::kable(Ryr.theo, row.names = TRUE)
+```
+
+**Table `r iTab = iTab + 1; iTab`.** Saithe in subareas 4 and 6, and in Division 3.a. Assumptions made for the interim year and in the forecast.
+
+```{r echo = FALSE}
+load(file.path(modelDir, "forecast.RData"))
+
+
+tab2 <- data.frame(
+  Variable = c(
+    paste0("Fages 4-7 (", assess_year, ")"),
+    paste0("SSB (", advice_year, ")"),
+    paste0("Rage 3 (", assess_year, ")"),
+    paste0("Rage 3 (", advice_year, ")"),
+    paste0("Total catch (", assess_year, ")"),
+    paste0("Wanted catch (", assess_year, ")"),
+    paste0("Unwanted catch (", assess_year, ")")),
+  Value = NaN,
+  Notes = NaN)
+
+baseScen <- subset(FC_df, subset = scenario %in% "Fsq")
+
+y1 <- which(colnames(attributes(FC[["Fsq"]])$shorttab) == assess_year)
+y2 <- which(colnames(attributes(FC[["Fsq"]])$shorttab) == advice_year)
+
+tab2$Value[1] <- icesRound(subset(baseScen, Year == assess_year)$`fbar:median`)
+tab2$Value[2] <- as.character(round(subset(baseScen, Year == advice_year)$`ssb:median`))
+tab2$Value[3] <- as.character(round(gmean(FC[["Fsq"]][[y1]]$rec)))
+tab2$Value[4] <- as.character(round(gmean(FC[["Fsq"]][[y2]]$rec)))
+## tab2$Value[3] <- as.character(round(subset(baseScen, Year == assess_year)$`rec:median`))
+## tab2$Value[4] <- as.character(round(subset(baseScen, Year == advice_year)$`rec:median`))
+tab2$Value[5] <- as.character(round(subset(baseScen, Year == assess_year)$`catch:median`))
+tab2$Value[6] <- as.character(round(subset(baseScen, Year == assess_year)$`Land:median`))
+tab2$Value[7] <- as.character(round(subset(baseScen, Year == assess_year)$`Discard:median`))
+
+
+tab2$Notes[1] <- paste0("Average exploitation pattern (", paste(range(Sy), collapse = "-"), ") scaled to F4-7 in ", assess_year - 1)
+tab2$Notes[2] <- "SSB at the beginning of the TAC year"
+tab2$Notes[3] <- paste0("Geometric mean recruitment re-sampled from the years ", paste(range(Ry), collapse = "-"))
+tab2$Notes[4] <- paste0("Geometric mean recruitment re-sampled from the years ", paste(range(Ry), collapse = "-"))
+tab2$Notes[5] <- "Short-term forecast"
+tab2$Notes[6] <- paste0("Assuming ", paste(range(Sy), collapse = "-"), " ave. wanted catch fraction by age")
+tab2$Notes[7] <- paste0("Assuming ", paste(range(Sy), collapse = "-"), " ave. unwanted catch fraction by age")
+
+## print table
+knitr::kable(tab2, row.names = FALSE)
+```
+
+
+\newline
+
+```{r echo = FALSE, results = "asis"}
+
+baseScenAltNm <- paste0("TAC(", assess_year, "), then MS A*+D")
+
+if (any(unique(FC_df$scenario) %in% baseScenAltNm))
+{
+    cat("#### alternative Interim year and forecast assumptions: TAC ", assess_year, "\n\n", sep = "")
+
+    iTab <- iTab+1
+    cat("**Table ", iTab, ".** Saithe in subareas 4 and 6, and in Division 3.a.",
+        " Assumptions made for the interim year and in the forecast.",
+        " Case where TAC ", assess_year, " is fished.\n", sep = "")
+
+    tab2.2 <- data.frame(
+                Variable = c(
+                               paste0("Fages 4-7 (", assess_year, ")"),
+                               paste0("SSB (", advice_year, ")"),
+                               paste0("Rage 3 (", assess_year, ")"),
+                               paste0("Rage 3 (", advice_year, ")"),
+                               paste0("Total catch (", assess_year, ")"),
+                               paste0("Wanted catch (", assess_year, ")"),
+                               paste0("Unwanted catch (", assess_year, ")")),
+                Value = NaN,
+                Notes = NaN)
+
+    baseScenAlt <- subset(FC_df, subset = scenario %in% baseScenAltNm)
+
+    y1 <- which(colnames(attributes(FC[[baseScenAltNm]])$shorttab) == assess_year)
+    y2 <- which(colnames(attributes(FC[[baseScenAltNm]])$shorttab) == advice_year)
+
+    tab2.2$Value[1] <- icesRound(subset(baseScenAlt, Year == assess_year)$`fbar:median`)
+    tab2.2$Value[2] <- as.character(round(subset(baseScenAlt, Year == advice_year)$`ssb:median`))
+    tab2.2$Value[3] <- as.character(round(gmean(FC[[baseScenAltNm]][[y1]]$rec)))
+    tab2.2$Value[4] <- as.character(round(gmean(FC[[baseScenAltNm]][[y2]]$rec)))
+    ## tab2.2$Value[3] <- as.character(round(subset(baseScenAlt, Year == assess_year)$`rec:median`))
+    ## tab2.2$Value[4] <- as.character(round(subset(baseScenAlt, Year == advice_year)$`rec:median`))
+    tab2.2$Value[5] <- as.character(round(subset(baseScenAlt, Year == assess_year)$`catch:median`))
+    tab2.2$Value[6] <- as.character(round(subset(baseScenAlt, Year == assess_year)$`Land:median`))
+    tab2.2$Value[7] <- as.character(round(subset(baseScenAlt, Year == assess_year)$`Discard:median`))
+
+
+    tab2.2$Notes[1] <- paste0("Average exploitation pattern (", paste(range(Sy), collapse = "-"), ") scaled to F4-7 in ", assess_year - 1)
+    tab2.2$Notes[2] <- "SSB at the beginning of the TAC year"
+    tab2.2$Notes[3] <- paste0("Geometric mean recruitment re-sampled from the years ", paste(range(Ry), collapse = "-"))
+    tab2.2$Notes[4] <- paste0("Geometric mean recruitment re-sampled from the years ", paste(range(Ry), collapse = "-"))
+    tab2.2$Notes[5] <- "Short-term forecast"
+    tab2.2$Notes[6] <- paste0("Assuming ", paste(range(Sy), collapse = "-"), " ave. wanted catch fraction by age")
+    tab2.2$Notes[7] <- paste0("Assuming ", paste(range(Sy), collapse = "-"), " ave. unwanted catch fraction by age")
+
+    ## print table
+    knitr::kable(tab2.2, row.names = FALSE)
+}
+
+```
+
+\newline
+
+### Fmsy scenario summary
+
+**Table `r iTab = iTab + 1; iTab`.** Forecast Fmsy,
+
+```{r echo = FALSE}
+load(file.path(modelDir, "forecast.RData"))
+tab <- attr(FC[[1]], "tab")
+tab <- as.data.frame(tab)
+names(tab) <- gsub(x = names(tab), pattern = ":", " ")
+tab <- xtab2taf(tab)
+kable(tab[, 1:13])
+```
+
+\newline
+
+```{r, echo = FALSE}
+include_graphics(file.path(reportDir, "forecast_Fmsy.png"))
+```
+
+**Figure `r iFig = iFig + 1; iFig`.** Forecast Fmsy.
+
+
+\newline
+
+### MSY scenario summary
+
+**Table `r iTab = iTab + 1; iTab`.** Forecast Fmsy (with MSY HCR), TAC `r assess_year` fished.
+
+```{r echo = FALSE}
+load(file.path(modelDir, "forecast.RData"))
+tab <- attr(FC[[2]], "tab")
+tab <- as.data.frame(tab)
+names(tab) <- gsub(x = names(tab), pattern = ":", " ")
+tab <- xtab2taf(tab)
+kable(tab[, 1:13])
+```
+
+\newline
+
+```{r, echo = FALSE}
+include_graphics(file.path(reportDir, "forecast_TAC-MSY.png"))
+```
+
+**Figure `r iFig = iFig + 1; iFig`.** Forecast Fmsy (with MSY HCR), TAC `r assess_year` fished.
+
+
+\newline
+
+```{r echo = FALSE, results = "asis"}
+
+baseScenAltNm <- "Fsq, then MSY" ### paste0("TAC(", assess_year, "), then MS A*+D")
+
+if (any(unique(FC_df$scenario) %in% baseScenAltNm))
+{
+    cat("#### Alternative MSY scenario: interim year F status quo\n\n")
+
+    iTab <- iTab + 1
+    cat("**Table ", iTab, ".**  Forecast Fmsy (with MSY HCR), ",
+        "F status quo.\n", sep = "")
+}
+
+```
+
+```{r echo = FALSE}
+
+baseScenAltNm <- "Fsq, then MSY" ### paste0("TAC(", assess_year, "), then MS A*+D")
+
+if (any(unique(FC_df$scenario) %in% baseScenAltNm))
+{
+    tab <- attr(FC[[baseScenAltNm]], "tab")
+    tab <- as.data.frame(tab)
+    names(tab) <- gsub(x = names(tab), pattern = ":", " ")
+    tab <- xtab2taf(tab)
+    kable(tab[, 1:13])
+}
+
+```
+\newline
+
+```{r echo = FALSE}
+
+baseScenAltNm <- "Fsq, then MSY" ### paste0("TAC(", assess_year, "), then MS A*+D")
+
+if (any(unique(FC_df$scenario) %in% baseScenAltNm))
+{
+    include_graphics(file.path(reportDir, "forecast_Fsq_MSY.png"))
+}
+
+```
+
+```{r echo = FALSE, results = "asis"}
+
+baseScenAltNm <- "Fsq, then MSY" ### paste0("TAC(", assess_year, "), then MS A*+D")
+
+if (any(unique(FC_df$scenario) %in% baseScenAltNm))
+{
+    iFig <- iFig + 1
+    cat("**Figure ", iFig, ".** Forecast Fmsy (with MSY HCR), F status quo.")
+}
+
+```
+
+\newline
+
+<!-- ### TAC `r assess_year` constraint, then Fmsy scenario summary -->
+
+<!-- **Table `r iTab = iTab + 1; iTab`.** Forecast TAC `r assess_year` fished, then Fmsy -->
+
+<!-- ```{r echo = FALSE} -->
+<!-- ## load(file.path(modelDir, "forecast.RData")) -->
+<!-- tab <- attr(FC[[2]], "tab") -->
+<!-- tab <- as.data.frame(tab) -->
+<!-- names(tab) <- gsub(x = names(tab), pattern = ":", " ") -->
+<!-- tab <- xtab2taf(tab) -->
+<!-- kable(tab[, 1:13]) -->
+<!-- ``` -->
+
+<!-- \newline -->
+
+<!-- ```{r, echo = FALSE} -->
+<!-- include_graphics(file.path(reportDir, "forecast_TAC-Fmsy.png")) -->
+<!-- ``` -->
+
+<!-- **Figure `r iFig = iFig + 1; iFig`.** Forecast TAC `r assess_year` fished, then Fmsy. -->
+
+
+<!-- \newline -->
+
+<!-- ## ### TAC `r assess_year` constraint, then MSY HCR scenario summary -->
+
+<!-- ## ```{r include = FALSE} -->
+<!-- ## idxTAC.MS.AstD <- which(grepl(pattern = paste0("TAC.?", assess_year, ".?, then MS A\\*\\+D"), -->
+<!-- ##                               names(FC), perl = TRUE)) -->
+<!-- ``` -->
+
+<!-- **Table `r iTab = iTab + 1; iTab`.** Forecast TAC `r assess_year` fished, MSY HCR -->
+
+
+<!-- ```{r echo = FALSE} -->
+<!-- idxTAC.MS.AstD <- which(grepl(pattern = paste0("TAC.?", assess_year, ".?, then MSY"), -->
+<!--                               names(FC), perl = TRUE)) -->
+<!-- if (length(idxTAC.MS.AstD)) -->
+<!-- { -->
+<!--     ## load(file.path(modelDir, "forecast.RData")) -->
+<!--     tab <- attr(FC[[idxTAC.MS.AstD]], "tab") -->
+<!--     tab <- as.data.frame(tab) -->
+<!--     names(tab) <- gsub(x = names(tab), pattern = ":", " ") -->
+<!--     tab <- xtab2taf(tab) -->
+<!--     kable(tab[, 1:13]) -->
+<!-- }else{ -->
+<!--     cat("No such scenario evaluated!") -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- \newline -->
+
+<!-- ```{r, echo = FALSE} -->
+<!-- if (length(idxTAC.MS.AstD)) -->
+<!-- { -->
+<!--     include_graphics(file.path(reportDir, "forecast_TAC-MSY.png")) -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- **Figure `r iFig = iFig + 1; iFig`.** Forecast TAC `r assess_year` fished, then MSY HCR. -->
+
+
+
+<!-- \newline -->
+
+### All catch scenarios summary
+
+**Table `r iTab = iTab + 1; iTab`.** Saithe in subareas 4 and 6, and in Division 3.a. Annual catch scenarios. All weights are in tonnes.
+
+```{r echo = FALSE}
+load(file.path(modelDir, "forecast.RData"))
+load(file.path(outputDir, "FC_df.Rdata"))
+
+scenIncl <- names(FC)
+scenIncl <- scenIncl[ ! grepl(pattern = "then MAP FMSY = 0.", x = scenIncl)]
+
+## Catch and Fbar in advice year
+CF <- subset(FC_df, subset = Year == advice_year & scenario %in% scenIncl)
+CF2 <- data.frame("scenario" = CF$scenario,
+  "Total catch" = CF$`catch:median`,
+  "Wanted catch" = CF$`Land:median`,
+  "Unwanted catch" = CF$`Discard:median`,
+  "Wanted catch in 3a4" = CF$`Land:median` * 0.906,
+  "Wanted catch in 6" = CF$`Land:median` * 0.094,
+  "Total Fbar" = CF$`fbar:median`,
+  "Wanted Fbar" = CF$`fbarL:median`,
+  "Unwanted Fbar" = CF$`fbarD:median`)
+
+## Spawning Biomass in advice year + 1
+SB <- subset(FC_df, subset = (Year == (advice_year + 1) & scenario %in% scenIncl))
+SB2 <- data.frame("scenario" = SB$scenario,
+                  "ssb" = SB$`ssb:median`)
+
+
+## merge and calculate perc change in ssb, TAC and advice
+TAC_ref <- TAC_assess_year # TAC for intermediate year
+Adv_ref <- TAC_assess_year  # Advice for intermediate year
+SB_ref <- subset(FC_df, Year == advice_year & scenario == "Fsq")$`ssb:median` # SSB for previous year Fsq forecast
+tab <- merge(x = CF2, y = SB2)
+tab$scenario <- as.character(tab$scenario)
+tab <- tab[match(scenIncl, tab$scenario), ]
+
+## check TAC constraints (automate later?)
+
+
+tab$`ssb delta perc` <- (tab$ssb - SB_ref) / SB_ref * 100
+tab$`TAC delta perc` <- (tab$Total.catch - TAC_ref) / TAC_ref * 100
+tab$`Adv delta perc` <- (tab$Total.catch - Adv_ref) / Adv_ref * 100
+
+## apply ICES rounding rule
+vars2icesRound <- grep(pattern = "Fbar", x = names(tab))
+tab[, vars2icesRound] <- apply(tab[, vars2icesRound], 2, icesRound)
+vars2round <- grep(pattern = "catch", x = names(tab))
+tab[, vars2round] <- apply(tab[, vars2round], 2, round)
+vars2round <- grep(pattern = "perc", x = names(tab))
+tab[, vars2round] <- apply(tab[, vars2round], 2, icesRound)
+
+names(tab) <- gsub(x = names(tab), pattern = ".", " ", fixed = TRUE)
+
+## print table
+knitr::kable(tab, row.names = FALSE)
+```
+
+
+
+
+
+
+
+
+
+
